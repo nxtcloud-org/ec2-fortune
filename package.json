@@ -1,0 +1,12 @@
+{
+  "name": "ec2-fortune",
+  "version": "1.0.0",
+  "description": "EC2 실습용 운세 페이지 (정적/동적 비교)",
+  "scripts": {
+    "start": "node server.js",
+    "static": "npx serve static -l 3000"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

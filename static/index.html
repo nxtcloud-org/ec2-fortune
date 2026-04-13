@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 운세 (정적)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      position: relative; overflow: hidden;
+    }
+    body::before, body::after {
+      content: ''; position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.3); filter: blur(40px);
+    }
+    body::before { width: 300px; height: 300px; top: -100px; right: -100px; }
+    body::after { width: 400px; height: 400px; bottom: -150px; left: -150px; }
+    .card {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 480px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(144,202,249,0.4);
+      text-align: center;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .badge {
+      display: inline-block;
+      background: #1565c0; color: #fff;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 2px;
+      padding: 6px 16px; border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Gaegu', cursive;
+      font-size: 2.5rem; color: #0d47a1;
+      margin-bottom: 32px;
+      letter-spacing: 2px;
+    }
+    .emoji {
+      font-size: 4rem; margin-bottom: 16px;
+      transition: transform 0.3s ease;
+    }
+    .fortune-text {
+      font-size: 1.4rem; font-weight: 700; color: #1a237e;
+      line-height: 1.6; margin-bottom: 24px;
+      min-height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 8px;
+    }
+    .btn {
+      background: #1565c0; color: #fff;
+      border: none; cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem; font-weight: 700;
+      padding: 14px 28px; border-radius: 16px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(21,101,192,0.3);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(21,101,192,0.4); }
+    .btn:active { transform: translateY(0); }
+    .divider {
+      height: 1px; background: linear-gradient(to right, transparent, #90caf9, transparent);
+      margin: 24px 0;
+    }
+    .meta {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.85rem; color: #1976d2;
+    }
+    .note {
+      font-weight: 500;
+    }
+    .tag-static {
+      display: inline-block;
+      background: #42a5f5; color: #fff;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 10px;
+    }
+    .hint {
+      font-size: 0.75rem; color: #546e7a;
+      margin-top: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">TODAY'S FORTUNE</div>
+    <h1>오늘의 운세</h1>
+    <div class="emoji" id="emoji">🌟</div>
+    <div class="fortune-text" id="fortune">버튼을 눌러 운세를 뽑아보세요</div>
+    <button class="btn" onclick="drawFortune()">🔄 운세 뽑기</button>
+    <div class="divider"></div>
+    <div class="meta">
+      <span class="note">브라우저가 혼자 뽑아요</span>
+      <span class="tag-static">STATIC</span>
+    </div>
+    <div class="hint">F12 열어보세요 — 운세 목록이 그대로 보여요</div>
+  </div>
+
+  <script>
+    // 운세 목록이 HTML 안에 그대로 들어있음 (F12 → Sources에서 확인 가능)
+    const fortunes = [
+      { emoji: "🎰", text: "오늘은 대박 나는 날! 로또를 사보세요" },
+      { emoji: "📚", text: "조용히 공부하면 좋은 성적이 올 것입니다" },
+      { emoji: "🍗", text: "오늘 점심은 치킨이 정답입니다" },
+      { emoji: "✨", text: "당신의 숨은 재능이 빛날 때입니다" },
+      { emoji: "💌", text: "오늘 친구에게 먼저 연락하면 좋은 일이 생겨요" },
+      { emoji: "☕", text: "커피 한 잔의 여유가 행운을 부릅니다" },
+      { emoji: "🌙", text: "오늘은 일찍 자면 내일이 빛납니다" },
+      { emoji: "🌸", text: "뜻밖의 만남이 기다리고 있습니다" },
+      { emoji: "💪", text: "지금 하고 있는 일, 잘하고 있어요!" },
+      { emoji: "🎲", text: "오늘의 행운 숫자는 7입니다" },
+    ];
+
+    function drawFortune() {
+      const picked = fortunes[Math.floor(Math.random() * fortunes.length)];
+      const emoji = document.getElementById('emoji');
+      const fortune = document.getElementById('fortune');
+      emoji.style.transform = 'scale(1.3) rotate(20deg)';
+      setTimeout(() => {
+        emoji.textContent = picked.emoji;
+        fortune.textContent = picked.text;
+        emoji.style.transform = 'scale(1) rotate(0deg)';
+      }, 150);
+    }
+  </script>
+</body>
+</html>
